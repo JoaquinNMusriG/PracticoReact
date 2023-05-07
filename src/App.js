@@ -1,23 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState } from "react";
 
 function App() {
+  const [data, setData] = useState(null);
+
+  const fetchData = async () => {
+    const response = await fetch('https://pruebas.free.beeceptor.com/test');
+    const jsonData = await response.json();
+    setData(jsonData);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={fetchData}>Obtener datos</button>
+      {data && (
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Género</th>
+              <th>Edad</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {data.firstName} {data.lastName}
+              </td>
+              <td>{data.gender}</td>
+              <td>{data.age}</td>
+              <td>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Calle</th>
+                      <th>Ciudad</th>
+                      <th>Estado</th>
+                      <th>Código Postal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{data.address.streetAddress}</td>
+                      <td>{data.address.city}</td>
+                      <td>{data.address.state}</td>
+                      <td>{data.address.postalCode}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td>{data.phoneNumbers[0].number}</td>
+            </tr>
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
